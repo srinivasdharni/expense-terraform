@@ -33,4 +33,11 @@
 	    Name = "${var.env}-igw"
 	  }
 	}
+	
+	resource "aws_eip" "ngw" {
+	  domain = "vpc"
+	  tags = {
+	    Name = "${var.env}-ngw"
+	  }
+	}
 		
