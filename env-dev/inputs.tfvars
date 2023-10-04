@@ -10,3 +10,4 @@ env = "dev"
 	default_vpc_cidr       = "172.31.0.0/16"
 	default_route_table_id = "rtb-02c93f799d4a0732c"
 	account_no             = "624783896224"
+	bastion_node_cidr      = ["172.31.22.233/32"]
