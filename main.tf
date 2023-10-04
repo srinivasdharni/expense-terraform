@@ -19,6 +19,8 @@
 	  internal          = false
 	  subnets           = module.vpc.public_subnets
 	  vpc_id            = module.vpc.vpc_id
+	  dns_name          = "backend-${var.env}.sddevops18.online"
+      zone_id           = "Z09059901XRPHNYMGLMJ4"
 	}
 	
 	module "private-lb" {
