@@ -11,7 +11,7 @@
 	    cidr_blocks = [var.vpc_cidr]
 	  }
 	  
-	    ingress {
+	  ingress {
 	    description = "SSH"
 	    from_port   = 22
 	    to_port     = 22
