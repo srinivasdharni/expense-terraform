@@ -21,5 +21,4 @@
 	  subnets        = module.vpc.private_subnets
 	  vpc_cidr       = var.vpc_cidr
 	  vpc_id         = module.vpc.vpc_id
-	  instance_class = var.instance_class
 	}
