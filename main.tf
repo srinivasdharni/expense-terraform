@@ -11,7 +11,7 @@
 	  	  default_route_table_id = var.default_route_table_id
 		}
 		
-	module "mysql" {
+	modules "mysql" {
 		  source = "./modules/rds"
 		  component      = "mysql"
 		  env            = var.env
