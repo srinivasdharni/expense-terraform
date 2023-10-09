@@ -11,3 +11,5 @@ env = "dev"
 	default_route_table_id = "rtb-02c93f799d4a0732c"
 	account_no             = "624783896224"
 	bastion_node_cidr      = ["172.31.22.233/32"]
+	instance_class         = "db.t3.medium"
+	
