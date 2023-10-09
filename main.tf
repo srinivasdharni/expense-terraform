@@ -21,6 +21,7 @@
 	  vpc_id            = module.vpc.vpc_id
 	  dns_name          = "backend-${var.env}.sddevops18.online"
       zone_id           = "Z0531070279OA6E0HE9DV"
+      tg_arn            = module.backend.tg_arn
 	}
 		
 	module "backend" {
