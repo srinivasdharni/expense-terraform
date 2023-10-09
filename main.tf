@@ -11,6 +11,19 @@
 	  	  default_route_table_id = var.default_route_table_id
 		}
 		
+	  module "public-lb" {
+	  source            = "./modules/alb"
+	  alb_sg_allow_cidr = "0.0.0.0/0"
+	  alb_type          = "public"
+	  env               = var.env
+	  internal          = false
+	  subnets           = module.vpc.public_subnets
+	  vpc_id            = module.vpc.vpc_id
+	  dns_name          = "${var.env}.sddevops18.online"
+	  zone_id           = "Z0531070279OA6E0HE9DV"
+	  tg_arn            = module.frontend.tg_arn
+	}
+		
 	module "private-lb" {
 	  source            = "./modules/alb"
 	  alb_sg_allow_cidr = var.vpc_cidr
