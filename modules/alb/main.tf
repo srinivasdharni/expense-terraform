@@ -52,3 +52,18 @@
      target_group_arn = var.tg_arn
   		}
 	}
+	
+	resource "aws_lb_listener" "listener-https" {
+	  count             = var.alb_type == "public" ? 1 : 0
+	  load_balancer_arn = aws_lb.alb.arn
+	  port              = "443"
+	  protocol          = "HTTPS"
+	  ssl_policy        = "ELBSecurityPolicy-2016-08"
+	  certificate_arn   = "arn:aws:acm:us-east-1:624783896224:certificate/79bdb781-1181-45bf-8b6a-fb7224c70f14"
+	
+	
+	  default_action {
+	    type             = "forward"
+	    target_group_arn = var.tg_arn
+	  }
+	}
