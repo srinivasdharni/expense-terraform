@@ -15,3 +15,7 @@ project_name = "expense"
 	min_size               = 1
 	desired_capacity       = 1
 	
+	## eks
+	node_count     = 2
+	instance_types = ["t3.large"]
+	
