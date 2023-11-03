@@ -49,3 +49,82 @@ resource "aws_iam_role_policy_attachment" "AmazonEKS_CNI_Policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
   role       = aws_iam_role.node.name
 }
+
+data "external" "thumbprint" {
+  depends_on = [aws_eks_cluster.main]
+  program    = ["bash", "${path.module}/thumbprint.sh", "${var.env}-${var.project_name}"]
+}
+
+resource "aws_iam_openid_connect_provider" "eks" {
+  url = aws_eks_cluster.main.identity[0].oidc[0].issuer
+
+  client_id_list = [
+    "sts.amazonaws.com"
+  ]
+
+  thumbprint_list = [lookup(data.external.thumbprint.result, "thumbprint", null)]
+}
+
+resource "aws_iam_role" "frontend-eks-sa" {
+  name = "${var.env}-${var.project_name}-frontend-eks-sa"
+
+  assume_role_policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Principal" : {
+          "Federated" : "arn:aws:iam::624783896224:oidc-provider/oidc.eks.us-east-1.amazonaws.com/id/${split("/", aws_eks_cluster.main.identity[0].oidc[0].issuer)[4]}"
+        },
+        "Action" : "sts:AssumeRoleWithWebIdentity",
+        "Condition" : {
+          "StringEquals" : {
+            "oidc.eks.us-east-1.amazonaws.com/id/${split("/", aws_eks_cluster.main.identity[0].oidc[0].issuer)[4]}:aud" : "sts.amazonaws.com",
+            "oidc.eks.us-east-1.amazonaws.com/id/${split("/", aws_eks_cluster.main.identity[0].oidc[0].issuer)[4]}:sub" : "system:serviceaccount:default:frontend"
+          }
+        }
+      }
+    ]
+  })
+  
+  resource "aws_iam_role" "backend-eks-sa" {
+  name = "${var.env}-${var.project_name}-backend-eks-sa"
+  assume_role_policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Principal" : {
+          "Federated" : "arn:aws:iam::624783896224:oidc-provider/oidc.eks.us-east-1.amazonaws.com/id/${split("/", aws_eks_cluster.main.identity[0].oidc[0].issuer)[4]}"
+        },
+        "Action" : "sts:AssumeRoleWithWebIdentity",
+        "Condition" : {
+          "StringEquals" : {
+            "oidc.eks.us-east-1.amazonaws.com/id/${split("/", aws_eks_cluster.main.identity[0].oidc[0].issuer)[4]}:aud" : "sts.amazonaws.com",
+            "oidc.eks.us-east-1.amazonaws.com/id/${split("/", aws_eks_cluster.main.identity[0].oidc[0].issuer)[4]}:sub" : "system:serviceaccount:default:backend"
+          }
+        }
+      }
+    ]
+  })
+  
+  resource "aws_iam_role" "schema-eks-sa" {
+  name = "${var.env}-${var.project_name}-schema-eks-sa"
+  assume_role_policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Principal" : {
+          "Federated" : "arn:aws:iam::624783896224:oidc-provider/oidc.eks.us-east-1.amazonaws.com/id/${split("/", aws_eks_cluster.main.identity[0].oidc[0].issuer)[4]}"
+        },
+        "Action" : "sts:AssumeRoleWithWebIdentity",
+        "Condition" : {
+          "StringEquals" : {
+            "oidc.eks.us-east-1.amazonaws.com/id/${split("/", aws_eks_cluster.main.identity[0].oidc[0].issuer)[4]}:aud" : "sts.amazonaws.com",
+            "oidc.eks.us-east-1.amazonaws.com/id/${split("/", aws_eks_cluster.main.identity[0].oidc[0].issuer)[4]}:sub" : "system:serviceaccount:default:schema"
+          }
+        }
+      }
+    ]
+  })
