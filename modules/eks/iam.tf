@@ -85,7 +85,9 @@ resource "aws_iam_role" "frontend-eks-sa" {
         }
       }
     ]
-  })
+   })
+  }
+  
   
   resource "aws_iam_role" "backend-eks-sa" {
   name = "${var.env}-${var.project_name}-backend-eks-sa"
