@@ -108,7 +108,8 @@ resource "aws_iam_role" "frontend-eks-sa" {
         }
       }
     ]
-  })
+   })
+  }
   
   resource "aws_iam_role" "schema-eks-sa" {
   name = "${var.env}-${var.project_name}-schema-eks-sa"
@@ -129,4 +130,5 @@ resource "aws_iam_role" "frontend-eks-sa" {
         }
       }
     ]
-  })
+   })
+  } 
